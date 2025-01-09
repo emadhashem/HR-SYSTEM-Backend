@@ -2,6 +2,9 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
+  Param,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -14,6 +17,10 @@ import { EmployeeService } from './employee.service';
 import { Roles } from 'src/shared/decorators/roles.decorator';
 import { GroupType } from '@prisma/client';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
+import {
+  UpdateEmployeeRequestDto,
+  UpdateEmployeeResponseDto,
+} from './dto/update-employee';
 
 @Controller('employee')
 export class EmployeeController {
@@ -27,5 +34,24 @@ export class EmployeeController {
     @Body() createEmployeeDto: CreateEmployeeRequestDto,
   ): Promise<CreateEmployeeResponseDto> {
     return this.employeeService.createEmployee(createEmployeeDto);
+  }
+
+  @Patch('/update/:id')
+  @UseGuards(RolesGuard)
+  @Roles([GroupType.HR])
+  @UseInterceptors(ClassSerializerInterceptor)
+  async updateEmployee(
+    @Body() createEmployeeDto: UpdateEmployeeRequestDto,
+    @Param('id') id: number,
+  ): Promise<UpdateEmployeeResponseDto> {
+    return this.employeeService.updateEmployee(id, createEmployeeDto);
+  }
+
+  @Delete('/delete/:id')
+  @UseGuards(RolesGuard)
+  @Roles([GroupType.HR])
+  @UseInterceptors(ClassSerializerInterceptor)
+  async deleteEmployee(@Param('id') id: number): Promise<{ message: string }> {
+    return { message: await this.employeeService.deleteEmployee(id) };
   }
 }

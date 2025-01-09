@@ -21,13 +21,14 @@ enum GroupType {
 enum AttendanceStatus {
   Present
   Absent
+  Late
 }
 
 model Employee {
   id           Int          @id @default(autoincrement())
   name         String
   email        String       @unique
-  passwordHash String?       @map("password_hash")
+  passwordHash String?      @map("password_hash")
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
   groupType    GroupType    @default(Normal_Employee) @map("group_type")
@@ -35,11 +36,11 @@ model Employee {
 }
 
 model Attendance {
-  id         Int      @id @default(autoincrement())
-  employee   Employee @relation(fields: [employeeId], references: [id])
+  id         Int              @id @default(autoincrement())
+  employee   Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   employeeId Int
   date       DateTime
   status     AttendanceStatus
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime         @updatedAt @map("updated_at")
 }

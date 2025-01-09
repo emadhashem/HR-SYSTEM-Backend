@@ -24,6 +24,12 @@ export class AuthService {
     return {
       accessToken,
       type: 'Bearer',
+      employee: {
+        id: employee.id,
+        name: employee.name,
+        email: employee.email,
+        role: employee.groupType,
+      },
     };
   }
 }
