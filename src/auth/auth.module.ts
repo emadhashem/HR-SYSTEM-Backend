@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt/jwt-auth.guard';
+import { EmployeeModule } from 'src/employee/employee.module';
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -15,6 +16,7 @@ import { JwtAuthGuard } from './jwt/jwt-auth.guard';
       }),
       inject: [ConfigService],
     }),
+    EmployeeModule
   ],
   controllers: [AuthController],
   providers: [
