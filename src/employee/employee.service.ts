@@ -9,6 +9,14 @@ import {
   UpdateEmployeeRequestDto,
   UpdateEmployeeResponseDto,
 } from './dto/update-employee';
+
+import {
+  FindEmployeeRequestDto,
+  FindEmployeeResponseDto,
+} from './dto/find-employees.dto';
+
+import { PaginatedOutputDto } from 'src/shared/types/paginated-output.dto';
+
 @Injectable()
 export class EmployeeService {
   constructor(private readonly prisma: PrismaService) {}
@@ -108,5 +116,53 @@ export class EmployeeService {
       }
       throw new BadRequestException(error.message);
     }
+  }
+
+  async getEmployees(
+    filters: FindEmployeeRequestDto,
+  ): Promise<PaginatedOutputDto<FindEmployeeResponseDto>> {
+    const skip = (filters.page - 1) * filters.perPage;
+    const totalElements = await this.prisma.employee.count({
+      where: {
+        OR: [
+          {
+            email: {
+              contains: filters.search,
+            },
+          },
+          {
+            name: {
+              contains: filters.search,
+            },
+          },
+        ],
+      },
+    });
+    const totalPages = Math.ceil(totalElements / filters.perPage);
+    const items = await this.prisma.employee.findMany({
+      where: {
+        OR: [
+          {
+            email: {
+              contains: filters.search,
+            },
+          },
+          {
+            name: {
+              contains: filters.search,
+            },
+          },
+        ],
+      },
+      skip,
+      take: filters.perPage,
+    });
+    const data = items.map((item) => FindEmployeeResponseDto.fromEntity(item));
+    return {
+      data,
+      meta: {
+        totalPages,
+      },
+    };
   }
 }
