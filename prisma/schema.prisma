@@ -18,31 +18,20 @@ enum GroupType {
   Normal_Employee
 }
 
-enum Role {
-  HR
-  Normal_Employee
-}
-
-
-model HR {
-  id           Int        @id @default(autoincrement())
-  email        String     @unique
-  passwordHash String     @map("password_hash")
-  role         Role       @default(Normal_Employee)
-  Employee     Employee[]
+enum AttendanceStatus {
+  Present
+  Absent
 }
 
 model Employee {
-  id          Int          @id @default(autoincrement())
-  name        String
-  email       String       @unique
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  groupType   GroupType    @default(Normal_Employee) @map("group_type")
-  role        Role         @default(Normal_Employee)
-  Attendance  Attendance[]
-  createdBy   HR?          @relation(fields: [createdById], references: [id])
-  createdById Int?
+  id           Int          @id @default(autoincrement())
+  name         String
+  email        String       @unique
+  passwordHash String       @map("password_hash")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  groupType    GroupType    @default(Normal_Employee) @map("group_type")
+  Attendance   Attendance[]
 }
 
 model Attendance {
@@ -50,7 +39,7 @@ model Attendance {
   employee   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
   date       DateTime
-  status     Boolean
+  status     AttendanceStatus
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 }
