@@ -40,3 +40,22 @@ $ yarn run test:cov
 DATABASE_URL="file:./dev.db"
 JWT_SECRET=8ad0d7aa65a422118e71ce8dbc99927ac30bce00296593779502447334a7125d8af79159761046b9fc003d8be4537278d744e3d92f63020972fb06a17b2c96ff
 ```
+## Database ( prisma )
+```
+# Generate
+
+npx prisma generate
+
+# Push
+
+npx prisma db push
+
+# Run the seed
+
+npx prisma db seed
+
+```
+## Login For first time :
+email : ivoiceup@test.com
+password : 12345678
+
