@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/services/prisma.service';
+import { PrismaService } from '../shared/services/prisma.service';
 import * as bcrypt from 'bcrypt';
 import {
   CreateEmployeeRequestDto,
@@ -77,15 +77,20 @@ export class EmployeeService {
     updateEmployeeDto: UpdateEmployeeRequestDto,
   ) {
     try {
-      const { name, email, groupType } = updateEmployeeDto;
       const employee = await this.prisma.employee.update({
         where: {
           id,
         },
         data: {
-          ...(name !== undefined && { name: name }),
-          ...(email !== undefined && { email: email }),
-          ...(groupType !== undefined && { groupType: groupType }),
+          ...(updateEmployeeDto.name && {
+            name: updateEmployeeDto.name,
+          }),
+          ...(updateEmployeeDto.email !== undefined && {
+            email: updateEmployeeDto.email,
+          }),
+          ...(updateEmployeeDto.groupType !== undefined && {
+            groupType: updateEmployeeDto.groupType,
+          }),
         },
       });
 

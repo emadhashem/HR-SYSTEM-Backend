@@ -75,7 +75,6 @@ export class AttendanceService {
           },
         },
       });
-      console.log(result);
       return UpdateAttendanceResponseDto.fromEntity(result);
     } catch (error) {
       if (error.code === 'P2025') {

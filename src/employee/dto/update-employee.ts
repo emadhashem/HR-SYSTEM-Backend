@@ -15,14 +15,14 @@ export class UpdateEmployeeRequestDto {
   @MaxLength(50)
   @MinLength(4)
   @IsOptional()
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
   @IsOptional()
   @IsEnum(GroupType)
-  groupType: GroupType;
+  groupType?: GroupType;
 }
 
 export class UpdateEmployeeResponseDto {
