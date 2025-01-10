@@ -66,7 +66,7 @@ export class EmployeeController {
   async getEmployees(
     @Query('page') page: number = 1,
     @Query('perPage') perPage: number = 10,
-    @Query('search') search: string,
+    @Query('search') search: string = "",
   ): Promise<PaginatedOutputDto<FindEmployeeResponseDto>> {
     return this.employeeService.getEmployees({
       page,

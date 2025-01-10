@@ -121,7 +121,11 @@ export class EmployeeService {
   async getEmployees(
     filters: FindEmployeeRequestDto,
   ): Promise<PaginatedOutputDto<FindEmployeeResponseDto>> {
-    const skip = (filters.page - 1) * filters.perPage;
+    const _filters = {};
+    if (filters.page && filters.perPage) {
+      _filters['skip'] = (filters.page - 1) * filters.perPage;
+      _filters['take'] = filters.perPage;
+    }
     const totalElements = await this.prisma.employee.count({
       where: {
         OR: [
@@ -138,7 +142,10 @@ export class EmployeeService {
         ],
       },
     });
-    const totalPages = Math.ceil(totalElements / filters.perPage);
+    let totalPages = 1;
+    if (filters.perPage) {
+      totalPages = Math.ceil(totalElements / filters.perPage);
+    }
     const items = await this.prisma.employee.findMany({
       where: {
         OR: [
@@ -154,8 +161,7 @@ export class EmployeeService {
           },
         ],
       },
-      skip,
-      take: filters.perPage,
+      ..._filters,
     });
     const data = items.map((item) => FindEmployeeResponseDto.fromEntity(item));
     return {

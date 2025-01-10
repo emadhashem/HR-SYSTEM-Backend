@@ -39,8 +39,10 @@ model Attendance {
   id         Int              @id @default(autoincrement())
   employee   Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   employeeId Int
-  date       DateTime
+  date       String        
   status     AttendanceStatus
   createdAt  DateTime         @default(now()) @map("created_at")
   updatedAt  DateTime         @updatedAt @map("updated_at")
+
+  @@unique([employeeId, date])
 }
