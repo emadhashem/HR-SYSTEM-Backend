@@ -40,7 +40,6 @@ export class AttendanceService {
           },
         },
       });
-      console.log(result);
       return CreateAttendanceResponseDto.fromEntity(result);
     } catch (error) {
       if (error.code === 'P2002') {
