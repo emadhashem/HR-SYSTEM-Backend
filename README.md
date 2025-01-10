@@ -56,6 +56,8 @@ npx prisma db seed
 
 ```
 ## Login For first time :
-email : ivoiceup@test.com
-password : 12345678
+
+<p>email : ivoiceup@test.com</p>
+<p>password : 12345678</p>
+
 
