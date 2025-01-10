@@ -45,7 +45,9 @@ export class AttendanceService {
       if (error.code === 'P2002') {
         throw new BadRequestException('Attendance Record already Taken');
       }
-
+      if (error.code === 'P2003') {
+        throw new BadRequestException('Employee not found');
+      }
       throw new BadRequestException('Failed to record attendance');
     }
   }
