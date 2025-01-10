@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/services/prisma.service';
+import { PrismaService } from '../shared/services/prisma.service';
 import {
   CreateAttendanceRequestDto,
   CreateAttendanceResponseDto,
@@ -8,7 +8,7 @@ import {
   UpdateAttendanceRequestDto,
   UpdateAttendanceResponseDto,
 } from './dto/update-attendance.dto';
-import { PaginatedOutputDto } from 'src/shared/types/paginated-output.dto';
+import { PaginatedOutputDto } from '../shared/types/paginated-output.dto';
 import { FindAttendanceByDateResponseDto } from './dto/find-attendance.dto';
 
 @Injectable()
@@ -40,12 +40,13 @@ export class AttendanceService {
           },
         },
       });
-
+      console.log(result);
       return CreateAttendanceResponseDto.fromEntity(result);
     } catch (error) {
       if (error.code === 'P2002') {
         throw new BadRequestException('Attendance Record already Taken');
       }
+
       throw new BadRequestException('Failed to record attendance');
     }
   }
@@ -100,7 +101,7 @@ export class AttendanceService {
           date: date,
         },
       });
-      let totalPages = 1
+      let totalPages = 1;
       if (perPage) {
         totalPages = Math.ceil(totalElements / perPage);
       }
@@ -133,7 +134,6 @@ export class AttendanceService {
         },
       };
     } catch (error) {
-      
       throw new BadRequestException('Failed to find attendance');
     }
   }
