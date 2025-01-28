@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../shared/services/prisma.service';
-import * as bcrypt from 'bcrypt';
 import {
   CreateEmployeeRequestDto,
   CreateEmployeeResponseDto,
@@ -16,17 +15,21 @@ import {
 } from './dto/find-employees.dto';
 
 import { PaginatedOutputDto } from 'src/shared/types/paginated-output.dto';
+import { Bcrypt } from '../shared/utils/bcrypt';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly bcrypt: Bcrypt,
+  ) {}
 
   async createEmployee(createEmployeeDto: CreateEmployeeRequestDto) {
     let passwordHash: string | null = null;
     if (createEmployeeDto.groupType == 'HR' && !createEmployeeDto.password)
       throw new BadRequestException('Password is required!');
     if (createEmployeeDto.groupType == 'HR')
-      passwordHash = await bcrypt.hash(createEmployeeDto.password, 10);
+      passwordHash = await this.bcrypt.hash(createEmployeeDto.password, 10);
     try {
       const employee = await this.prisma.employee.create({
         data: {
@@ -59,7 +62,7 @@ export class EmployeeService {
       );
     }
 
-    const isPasswordMatch = await bcrypt.compare(
+    const isPasswordMatch = await this.bcrypt.compare(
       password,
       employee.passwordHash,
     );
