@@ -24,25 +24,64 @@ enum AttendanceStatus {
   Late
 }
 
+enum EmployeeStatus {
+  Active
+  Inactive
+  OnLeave
+  Suspended
+  Probation
+}
+
+enum PayFrequency {
+  Monthly
+  BiWeekly
+  Weekly
+  Quarterly
+  Annually
+}
+
 model Employee {
-  id           Int          @id @default(autoincrement())
-  name         String
-  email        String       @unique
-  passwordHash String?      @map("password_hash")
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
-  groupType    GroupType    @default(Normal_Employee) @map("group_type")
-  Attendance   Attendance[]
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String         @unique
+  passwordHash   String?        @map("password_hash")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  groupType      GroupType      @default(Normal_Employee) @map("group_type")
+  Attendance     Attendance[]
+  department     Department?     @relation(fields: [departmentId], references: [id])
+  departmentId   Int?            @map("department_id")
+  employeeStatus EmployeeStatus @default(Active) @map("employee_status")
+  salaryHistory  Salary[]
 }
 
 model Attendance {
   id         Int              @id @default(autoincrement())
   employee   Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   employeeId Int
-  date       String        
+  date       String
   status     AttendanceStatus
   createdAt  DateTime         @default(now()) @map("created_at")
   updatedAt  DateTime         @updatedAt @map("updated_at")
 
   @@unique([employeeId, date])
+}
+
+model Department {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  employees Employee[]
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+}
+
+model Salary {
+  id            Int          @id @default(autoincrement())
+  amount        Decimal
+  payFrequency  PayFrequency @default(Monthly) @map("pay_frequency")
+  effectiveDate DateTime     @map("effective_date")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  employeeId    Int          @map("employee_id")
+  Employee      Employee     @relation(fields: [employeeId], references: [id])
 }

@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -66,12 +67,25 @@ export class EmployeeController {
   async getEmployees(
     @Query('page') page: number = 1,
     @Query('perPage') perPage: number = 10,
-    @Query('search') search: string = "",
+    @Query('search') search: string = '',
   ): Promise<PaginatedOutputDto<FindEmployeeResponseDto>> {
     return this.employeeService.getEmployees({
       page,
       perPage,
       search,
     });
+  }
+
+  @Patch('/assign-department/:employeeId/:departmentId')
+  @UseGuards(RolesGuard)
+  @Roles([GroupType.HR])
+  async assignDepartmentToEmployee(
+    @Param('employeeId', ParseIntPipe) employeeId: number,
+    @Param('departmentId', ParseIntPipe) departmentId: number,
+  ) {
+    return await this.employeeService.assignDepartmentToEmployee(
+      employeeId,
+      departmentId,
+    );
   }
 }

@@ -6,6 +6,7 @@ import {
   CreateEmployeeResponseDto,
 } from './dto/create-employee.dto';
 import {
+  AssignDepartmentToEmployeeResponseDto,
   UpdateEmployeeRequestDto,
   UpdateEmployeeResponseDto,
 } from './dto/update-employee';
@@ -175,5 +176,27 @@ export class EmployeeService {
         totalPages,
       },
     };
+  }
+
+  async assignDepartmentToEmployee(employeeId: number, departmentId: number) {
+    try {
+      const employee = await this.prisma.employee.update({
+        where: {
+          id: employeeId,
+        },
+        data: {
+          departmentId,
+        },
+      });
+      if (!employee) {
+        throw new Error('Employee not found!');
+      }
+      return AssignDepartmentToEmployeeResponseDto.fromEntity(employee);
+    } catch (error) {
+      if (error.code == 'P2025') {
+        throw new BadRequestException('Employee not found!');
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 }

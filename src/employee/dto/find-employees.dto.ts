@@ -21,7 +21,7 @@ export class FindEmployeeResponseDto {
   id: number;
   groupType: GroupType;
   createdAt: Date;
-  updatedAt: Date | null;
+  updatedAt: Date;
 
   static fromEntity(employee: Employee) {
     const response = new FindEmployeeResponseDto();

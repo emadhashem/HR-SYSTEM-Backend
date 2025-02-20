@@ -6,11 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
   const passwordHash = await bcrypt.hash('12345678', 10);
   await prisma.employee.upsert({
-    where: { email: 'ivoiceup@test.com' },
+    where: { email: 'emad@test.com' },
     update: {},
     create: {
-      name: 'ivoiceup',
-      email: 'ivoiceup@test.com',
+      name: 'emad',
+      email: 'emad@test.com',
       passwordHash: passwordHash,
       groupType: 'HR',
     },
