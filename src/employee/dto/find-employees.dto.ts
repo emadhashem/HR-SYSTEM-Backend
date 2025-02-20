@@ -22,6 +22,7 @@ export class FindEmployeeResponseDto {
   groupType: GroupType;
   createdAt: Date;
   updatedAt: Date;
+  departmentId: number | null;
 
   static fromEntity(employee: Employee) {
     const response = new FindEmployeeResponseDto();
@@ -34,6 +35,7 @@ export class FindEmployeeResponseDto {
     response.groupType = employee.groupType;
     response.createdAt = employee.createdAt;
     response.updatedAt = employee.updatedAt;
+    response.departmentId = employee.departmentId;
     return response;
   }
 }

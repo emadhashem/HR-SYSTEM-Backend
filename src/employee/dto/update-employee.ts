@@ -31,6 +31,7 @@ export class UpdateEmployeeResponseDto {
   email: string;
   groupType: GroupType;
   updatedAt: Date;
+  departmentId: number | null;
   static fromEntity(employee: any) {
     const response = new UpdateEmployeeResponseDto();
     response.name = employee.name;
@@ -38,6 +39,7 @@ export class UpdateEmployeeResponseDto {
     response.groupType = employee.groupType;
     response.id = employee.id;
     response.updatedAt = employee.updatedAt;
+    response.departmentId = employee.departmentId;
     return response;
   }
 }
