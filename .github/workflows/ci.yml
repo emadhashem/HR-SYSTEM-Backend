@@ -1,0 +1,41 @@
+name: CI Pipeline - Build and Test (NestJS)
+
+on:
+  push:
+    branches:
+      - master # Trigger on push to the master branch
+  pull_request:
+    branches:
+      - master # Trigger on pull requests to the master branch
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js 16
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22' # Specify Node.js 16
+          cache: 'yarn' # Cache Yarn dependencies
+
+      # Step 3: Install Yarn globally (if not already installed)
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      # Step 4: Install dependencies using Yarn
+      - name: Install dependencies
+        run: yarn install
+
+      # Step 5: Build the NestJS project
+      - name: Build
+        run: yarn build
+
+      # Step 6: Run tests
+      - name: Run tests
+        run: yarn test
