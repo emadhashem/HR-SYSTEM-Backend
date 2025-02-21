@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/services/prisma.service';
+import { PrismaService } from '../shared/services/prisma.service';
 import {
   CreateDepartmentRequestDto,
   CreateDepartmentResponseDto,
@@ -48,9 +48,7 @@ export class DepartmentService {
           }),
           ...(data.employees && {
             employees: {
-              connect: data.employees.map((employeeId) => ({
-                id: employeeId,
-              })),
+              set: data.employees.map((employeeId) => ({ id: employeeId })),
             },
           }),
         },

@@ -49,8 +49,8 @@ model Employee {
   updatedAt      DateTime       @updatedAt @map("updated_at")
   groupType      GroupType      @default(Normal_Employee) @map("group_type")
   Attendance     Attendance[]
-  department     Department?     @relation(fields: [departmentId], references: [id])
-  departmentId   Int?            @map("department_id")
+  department     Department?    @relation(fields: [departmentId], references: [id])
+  departmentId   Int?           @map("department_id")
   employeeStatus EmployeeStatus @default(Active) @map("employee_status")
   salaryHistory  Salary[]
 }
@@ -83,5 +83,5 @@ model Salary {
   createdAt     DateTime     @default(now()) @map("created_at")
   updatedAt     DateTime     @updatedAt @map("updated_at")
   employeeId    Int          @map("employee_id")
-  Employee      Employee     @relation(fields: [employeeId], references: [id])
+  Employee      Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }

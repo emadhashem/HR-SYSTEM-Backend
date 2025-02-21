@@ -14,7 +14,7 @@ export class CreateDepartmentResponseDto {
   id: number;
   createdAt: Date;
   updatedAt: Date;
-
+  employees = [];
   static fromEntity(entity: Department) {
     const response = new CreateDepartmentResponseDto();
     response.name = entity.name;

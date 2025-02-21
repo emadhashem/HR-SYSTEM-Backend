@@ -20,4 +20,24 @@ export class GetCurrentSalaryResponse {
   }
 }
 
+export class GetSalaryHistoryResponseDto {
+  id: number;
+  amount: number;
+  payFrequency: PayFrequency;
+  effectiveDate: Date;
+  updatedAt: Date;
+  employeeId: number;
+
+  static fromEntity(entity: Salary): GetSalaryHistoryResponseDto {
+    const dto = new GetSalaryHistoryResponseDto();
+    dto.id = entity.id;
+    dto.amount = entity.amount.toNumber();
+    dto.payFrequency = entity.payFrequency;
+    dto.effectiveDate = entity.effectiveDate;
+    dto.updatedAt = entity.updatedAt;
+    dto.employeeId = entity.employeeId;
+    return dto;
+  }
+}
+
 export type GetSalaryHistoryOfEmployeeResponse = GetCurrentSalaryResponse[];

@@ -1,6 +1,5 @@
 import { Department, Employee, GroupType } from '@prisma/client';
 import {
-  ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
   IsOptional,
@@ -20,7 +19,6 @@ export class UpdateDepartmentRequestDto {
 
   @IsArray()
   @IsPositive({ each: true })
-  @ArrayNotEmpty()
   @IsOptional()
   employees?: number[];
 }

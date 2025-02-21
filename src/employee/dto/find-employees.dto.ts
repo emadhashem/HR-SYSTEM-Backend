@@ -1,4 +1,4 @@
-import { Employee, GroupType } from '@prisma/client';
+import { Employee, EmployeeStatus, GroupType } from '@prisma/client';
 import { IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class FindEmployeeRequestDto {
@@ -22,9 +22,17 @@ export class FindEmployeeResponseDto {
   groupType: GroupType;
   createdAt: Date;
   updatedAt: Date;
-  departmentId: number | null;
-
-  static fromEntity(employee: Employee) {
+  employeeStatus: EmployeeStatus;
+  department?: {
+    name: string;
+  };
+  static fromEntity(
+    employee: Employee & {
+      department: {
+        name: string;
+      };
+    },
+  ) {
     const response = new FindEmployeeResponseDto();
     if (!employee) {
       return null;
@@ -35,7 +43,10 @@ export class FindEmployeeResponseDto {
     response.groupType = employee.groupType;
     response.createdAt = employee.createdAt;
     response.updatedAt = employee.updatedAt;
-    response.departmentId = employee.departmentId;
+    response.employeeStatus = employee.employeeStatus;
+    response.department = {
+      name: employee.department?.name ?? null,
+    };
     return response;
   }
 }

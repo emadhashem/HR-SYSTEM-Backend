@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateDepartmentRequestDto } from './dto/create-department.dto';
-import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { RolesGuard } from '../shared/guards/roles.guard';
 import { GroupType } from '@prisma/client';
-import { Roles } from 'src/shared/decorators/roles.decorator';
+import { Roles } from '../shared/decorators/roles.decorator';
 import { DepartmentService } from './department.service';
 import { UpdateDepartmentRequestDto } from './dto/update-department.dto';
 

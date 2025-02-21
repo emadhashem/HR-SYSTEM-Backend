@@ -8,7 +8,10 @@ import {
   UpdateSalaryRequestDto,
   UpdateSalaryResponseDto,
 } from './dto/update-salary.dto';
-import { GetCurrentSalaryResponse } from './dto/get-salary.dto';
+import {
+  GetCurrentSalaryResponse,
+  GetSalaryHistoryResponseDto,
+} from './dto/get-salary.dto';
 
 @Injectable()
 export class SalaryService {
@@ -101,18 +104,19 @@ export class SalaryService {
     }
   }
 
-  async getCurrentSalaryByEmployee(empId: number) {
+  async getSalaryHistory() {
     try {
-      const salary = await this.prisma.salary.findFirst({
-        where: { employeeId: empId },
+      const salary = await this.prisma.salary.findMany({
         orderBy: { effectiveDate: 'desc' },
       });
       if (!salary) {
         throw new Error('Salary not found');
       }
-      return GetCurrentSalaryResponse.fromEntity(salary);
+      return salary.map((salary) =>
+        GetSalaryHistoryResponseDto.fromEntity(salary),
+      );
     } catch (error) {
-      if (error.message.includes('not found')) {
+      if (error.code === 'P2025') {
         throw new BadRequestException('Salary not found');
       }
       throw new BadRequestException(

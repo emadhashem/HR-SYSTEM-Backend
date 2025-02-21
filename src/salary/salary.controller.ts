@@ -44,6 +44,13 @@ export class SalaryController {
     return await this.salaryService.deleteSalary(id);
   }
 
+  @Get('/history')
+  @UseGuards(RolesGuard)
+  @Roles([GroupType.HR])
+  async getSalaryHistory() {
+    return await this.salaryService.getSalaryHistory();
+  }
+
   @Get('/history/:emp_id')
   @UseGuards(RolesGuard)
   @Roles([GroupType.HR])
@@ -51,14 +58,5 @@ export class SalaryController {
     @Param('emp_id', ParseIntPipe) empId: number,
   ) {
     return await this.salaryService.getSalaryHistoryByEmployee(empId);
-  }
-
-  @Get('/current/:emp_id')
-  @UseGuards(RolesGuard)
-  @Roles([GroupType.HR])
-  async getCurrentSalaryByEmployee(
-    @Param('emp_id', ParseIntPipe) empId: number,
-  ) {
-    return await this.salaryService.getCurrentSalaryByEmployee(empId);
   }
 }

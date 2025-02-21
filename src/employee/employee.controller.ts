@@ -88,4 +88,11 @@ export class EmployeeController {
       departmentId,
     );
   }
+
+  @Get('/profile/:id')
+  @UseGuards(RolesGuard)
+  @Roles([GroupType.HR])
+  async getEmployeeProfile(@Param('id', ParseIntPipe) id: number) {
+    return await this.employeeService.getEmployeeProfileById(id);
+  }
 }

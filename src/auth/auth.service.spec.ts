@@ -4,7 +4,7 @@ import { EmployeeService } from '../employee/employee.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginRequestDto } from './dto/login.dto';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import { Employee, GroupType } from '@prisma/client';
+import { Employee, EmployeeStatus, GroupType } from '@prisma/client';
 
 jest.mock('../employee/employee.service');
 jest.mock('@nestjs/jwt');
@@ -43,6 +43,8 @@ describe('AuthService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         passwordHash: '',
+        employeeStatus: EmployeeStatus.Active,
+        departmentId: null,
       };
       const mockAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5...';
 
