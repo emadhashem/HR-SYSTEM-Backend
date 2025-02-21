@@ -5,6 +5,7 @@ import {
   CreateEmployeeResponseDto,
 } from './dto/create-employee.dto';
 import {
+  AssignDepartmentToEmployeeResponseDto,
   UpdateEmployeeRequestDto,
   UpdateEmployeeResponseDto,
 } from './dto/update-employee';
@@ -15,7 +16,7 @@ import {
 } from './dto/find-employees.dto';
 
 import { PaginatedOutputDto } from 'src/shared/types/paginated-output.dto';
-import { Bcrypt } from '../shared/utils/bcrypt';
+import { GetEmployeeProfileResponseDto } from './dto/employee-profile';
 
 @Injectable()
 export class EmployeeService {
@@ -95,8 +96,23 @@ export class EmployeeService {
             groupType: updateEmployeeDto.groupType,
           }),
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          groupType: true,
+          createdAt: true,
+          updatedAt: true,
+          departmentId: true,
+          passwordHash: true,
+          employeeStatus: true,
+          department: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
-
       return UpdateEmployeeResponseDto.fromEntity(employee);
     } catch (error) {
       if (error.code == 'P2002') {
@@ -169,8 +185,25 @@ export class EmployeeService {
           },
         ],
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        groupType: true,
+        createdAt: true,
+        updatedAt: true,
+        departmentId: true,
+        passwordHash: true,
+        employeeStatus: true,
+        department: {
+          select: {
+            name: true,
+          },
+        },
+      },
       ..._filters,
     });
+
     const data = items.map((item) => FindEmployeeResponseDto.fromEntity(item));
     return {
       data,
@@ -178,5 +211,64 @@ export class EmployeeService {
         totalPages,
       },
     };
+  }
+
+  async assignDepartmentToEmployee(employeeId: number, departmentId: number) {
+    try {
+      const employee = await this.prisma.employee.update({
+        where: {
+          id: employeeId,
+        },
+        data: {
+          departmentId,
+        },
+      });
+      if (!employee) {
+        throw new Error('Employee not found!');
+      }
+      return AssignDepartmentToEmployeeResponseDto.fromEntity(employee);
+    } catch (error) {
+      if (error.code == 'P2025') {
+        throw new BadRequestException('Employee not found!');
+      }
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async getEmployeeProfileById(
+    id: number,
+  ): Promise<GetEmployeeProfileResponseDto> {
+    const employeeProfile = await this.prisma.employee.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        groupType: true,
+        createdAt: true,
+        updatedAt: true,
+        departmentId: true,
+        employeeStatus: true,
+        department: {
+          select: {
+            name: true,
+          },
+        },
+        salaryHistory: {
+          select: {
+            amount: true,
+            updatedAt: true,
+            effectiveDate: true,
+            payFrequency: true,
+          },
+        },
+      },
+    });
+    if (!employeeProfile) {
+      throw new BadRequestException('Employee not found!');
+    }
+    return GetEmployeeProfileResponseDto.fromEntity(employeeProfile);
   }
 }

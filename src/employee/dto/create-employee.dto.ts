@@ -32,6 +32,7 @@ export class CreateEmployeeResponseDto {
   groupType: GroupType;
   createdAt: Date;
   updatedAt: Date | null;
+  departmentId: number | null;
   @Exclude()
   passwordHash: string | null;
 

@@ -57,6 +57,8 @@ describe('EmployeeService', () => {
         passwordHash: expect.any(String),
         createdAt: new Date(),
         updatedAt: new Date(),
+        departmentId: 0,
+        employeeStatus: 'Active',
       });
 
       const employee = await employeeService.createEmployee(createEmployeeDto);
@@ -121,9 +123,13 @@ describe('EmployeeService', () => {
         passwordHash: '',
         createdAt: new Date(),
         updatedAt: new Date(),
+        departmentId: 1,
+        department: {
+          name: 'test',
+        },
       };
 
-      prisma.employee.update.mockResolvedValue(mockUpdatedEmployee);
+      prisma.employee.update.mockResolvedValue(mockUpdatedEmployee as any);
 
       const updatedEmployee = await employeeService.updateEmployee(
         1,
@@ -131,12 +137,29 @@ describe('EmployeeService', () => {
       );
 
       expect(updatedEmployee).toBeInstanceOf(UpdateEmployeeResponseDto);
+
       expect(prisma.employee.update).toHaveBeenCalledWith({
         where: { id: 1 },
         data: {
           name: updateEmployeeDto.name,
           email: updateEmployeeDto.email,
           groupType: updateEmployeeDto.groupType,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          groupType: true,
+          createdAt: true,
+          updatedAt: true,
+          departmentId: true,
+          passwordHash: true,
+          employeeStatus: true,
+          department: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
     });
@@ -153,8 +176,13 @@ describe('EmployeeService', () => {
         passwordHash: 'test',
         createdAt: new Date(),
         updatedAt: new Date(),
+        departmentId: 1,
+        department: {
+          name: 'test',
+        },
+        employeeStatus: 'Active',
       };
-      prisma.employee.update.mockResolvedValue(mockUpdatedEmployee);
+      prisma.employee.update.mockResolvedValue(mockUpdatedEmployee as any);
 
       const updatedEmployee = await employeeService.updateEmployee(
         1,
@@ -166,6 +194,24 @@ describe('EmployeeService', () => {
         where: { id: 1 },
         data: {
           name: updateEmployeeDto.name,
+          email: updateEmployeeDto.email,
+          groupType: updateEmployeeDto.groupType,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          groupType: true,
+          createdAt: true,
+          updatedAt: true,
+          departmentId: true,
+          passwordHash: true,
+          employeeStatus: true,
+          department: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
     });
@@ -206,16 +252,6 @@ describe('EmployeeService', () => {
   describe('deleteEmployee', () => {
     it('should delete an employee successfully', async () => {
       const employeeId = 1;
-      const createEmployeeDto = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        groupType: GroupType.HR,
-        id: employeeId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        passwordHash: 'test',
-      };
-      prisma.employee.delete.mockResolvedValueOnce(createEmployeeDto);
 
       const result = await employeeService.deleteEmployee(employeeId);
 
@@ -273,6 +309,8 @@ describe('EmployeeService', () => {
           updatedAt: new Date(),
           passwordHash: 'test',
           groupType: GroupType.HR,
+          departmentId: null,
+          employeeStatus: 'Active',
         },
         {
           id: 2,
@@ -282,6 +320,8 @@ describe('EmployeeService', () => {
           updatedAt: new Date(),
           passwordHash: 'test',
           groupType: GroupType.HR,
+          departmentId: null,
+          employeeStatus: 'Active',
         },
       ];
       const expectedData = mockEmployees.map(
@@ -314,6 +354,22 @@ describe('EmployeeService', () => {
       };
       expect(prisma.employee.count).toHaveBeenCalledTimes(1);
       expect(prisma.employee.findMany).toHaveBeenCalledWith({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          groupType: true,
+          createdAt: true,
+          updatedAt: true,
+          departmentId: true,
+          passwordHash: true,
+          employeeStatus: true,
+          department: {
+            select: {
+              name: true,
+            },
+          },
+        },
         where: whereClause,
       });
     });
@@ -324,7 +380,7 @@ describe('EmployeeService', () => {
         page: 2,
         perPage: 10,
       };
-      const mockEmployees = [
+      const mockEmployees: Employee[] = [
         {
           id: 3,
           name: 'John Doe',
@@ -333,6 +389,8 @@ describe('EmployeeService', () => {
           updatedAt: new Date(),
           passwordHash: 'test',
           groupType: GroupType.HR,
+          departmentId: null,
+          employeeStatus: 'Active',
         },
         ,
       ];
@@ -363,9 +421,33 @@ describe('EmployeeService', () => {
       expect(prisma.employee.findMany).toHaveBeenCalledWith({
         where: {
           OR: [
-            { email: { contains: filters.search } },
-            { name: { contains: filters.search } },
+            {
+              email: {
+                contains: filters.search,
+              },
+            },
+            {
+              name: {
+                contains: filters.search,
+              },
+            },
           ],
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          groupType: true,
+          createdAt: true,
+          updatedAt: true,
+          departmentId: true,
+          passwordHash: true,
+          employeeStatus: true,
+          department: {
+            select: {
+              name: true,
+            },
+          },
         },
         skip: (filters.page - 1) * filters.perPage,
         take: filters.perPage,
