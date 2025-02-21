@@ -17,6 +17,7 @@ import {
   FindEmployeeRequestDto,
   FindEmployeeResponseDto,
 } from './dto/find-employees.dto';
+import { Bcrypt } from '../shared/utils/bcrypt';
 
 jest.mock('../shared/services/prisma.service', () => ({
   PrismaService: jest.fn().mockImplementation(() => ({
@@ -31,7 +32,7 @@ describe('EmployeeService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EmployeeService, PrismaService],
+      providers: [EmployeeService, PrismaService, Bcrypt],
     }).compile();
 
     employeeService = module.get<EmployeeService>(EmployeeService);

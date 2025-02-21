@@ -15,8 +15,9 @@ import {
   FindEmployeeResponseDto,
 } from './dto/find-employees.dto';
 
-import { PaginatedOutputDto } from 'src/shared/types/paginated-output.dto';
+import { PaginatedOutputDto } from '../shared/types/paginated-output.dto';
 import { GetEmployeeProfileResponseDto } from './dto/employee-profile';
+import { Bcrypt } from '../shared/utils/bcrypt';
 
 @Injectable()
 export class EmployeeService {
