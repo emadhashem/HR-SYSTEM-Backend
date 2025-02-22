@@ -36,7 +36,7 @@ jobs:
       - name: Print secrets
         run: |
           echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
-          echo "PORT: ${{ secrets.PORT }}"
+          echo "JWT_SECRET: ${{ secrets.JWT_SECRET }}"
 
       # Step 6: Build the NestJS project
       - name: Build
