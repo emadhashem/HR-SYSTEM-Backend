@@ -56,7 +56,9 @@ jobs:
 
       # Step 2: Build the Docker image
       - name: Build Docker image
-        run: docker build -t hr-system .
+        run: docker build -t hr-system  \
+            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            .
 
       # Step 3: Run the Docker container and test it
       - name: Run Docker container
