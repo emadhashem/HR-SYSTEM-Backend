@@ -28,7 +28,7 @@ RUN npm install --omit=dev
 RUN npm install -D ts-node typescript @types/node
 
 RUN npx prisma generate
-RUN npx prisma migrate deploy
+RUN npx prisma migrate dev
 RUN npx prisma db push
 
 EXPOSE 4000
