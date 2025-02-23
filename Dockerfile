@@ -2,7 +2,7 @@ FROM node:21-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json ./
 COPY prisma/schema.prisma ./prisma/
 
 RUN npm install
@@ -25,8 +25,7 @@ FROM node:21-alpine
 # ENV JWT_SECRET=$JWT_SECRET
 
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/yarn.lock ./
+COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY prisma/schema.prisma ./prisma/
 COPY prisma/seed.ts ./prisma/
