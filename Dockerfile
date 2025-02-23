@@ -8,7 +8,7 @@ COPY prisma/schema.prisma ./prisma/
 RUN npm install
 
 COPY . .
-# COPY .env ./.env
+COPY .env ./.env
 
 RUN npm run build
 
@@ -30,7 +30,7 @@ COPY --from=builder /app/yarn.lock ./
 COPY --from=builder /app/dist ./dist
 COPY prisma/schema.prisma ./prisma/
 COPY prisma/seed.ts ./prisma/
-# COPY .env ./.env
+COPY .env ./.env
 
 RUN npm install --omit=dev
 

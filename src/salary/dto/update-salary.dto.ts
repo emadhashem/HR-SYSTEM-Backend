@@ -1,14 +1,24 @@
 import { PayFrequency, Salary } from '@prisma/client';
 import { IsDateString, IsEnum, IsOptional } from 'class-validator';
 import { CreateSalaryResponseDto } from './create-salary.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateSalaryRequestDto {
   @IsEnum(PayFrequency)
   @IsOptional()
+  @ApiProperty({
+    description: 'The pay frequency of the salary',
+    example: 'MONTHLY',
+    enum: PayFrequency,
+  })
   payFrequency?: PayFrequency;
 
   @IsDateString()
   @IsOptional()
+  @ApiProperty({
+    description: 'The effective date of the salary',
+    example: '2021-01-01',
+  })
   effectiveDate?: Date;
 }
 

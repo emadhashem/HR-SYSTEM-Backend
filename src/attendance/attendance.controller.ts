@@ -22,6 +22,7 @@ import {
 } from './dto/update-attendance.dto';
 import { PaginatedOutputDto } from 'src/shared/types/paginated-output.dto';
 import { FindAttendanceByDateResponseDto } from './dto/find-attendance.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('attendance')
 export class AttendanceController {
@@ -30,6 +31,11 @@ export class AttendanceController {
   @UseGuards(RolesGuard)
   @Roles([GroupType.HR])
   @Post('/create')
+  @ApiResponse({
+    status: 200,
+    description: 'The attendance has been successfully created.',
+    type: CreateAttendanceResponseDto,
+  })
   async createAttendance(
     @Body() createAttendanceRequestDto: CreateAttendanceRequestDto,
   ): Promise<CreateAttendanceResponseDto> {
@@ -39,6 +45,11 @@ export class AttendanceController {
   @UseGuards(RolesGuard)
   @Roles([GroupType.HR])
   @Patch('/update/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'The attendance has been successfully updated.',
+    type: UpdateAttendanceResponseDto,
+  })
   async updateAttendance(
     @Body() updateAttendanceRequestDto: UpdateAttendanceRequestDto,
     @Param('id') id: number,
@@ -52,6 +63,11 @@ export class AttendanceController {
   @UseGuards(RolesGuard)
   @Roles([GroupType.HR])
   @Get('/get-by-date')
+  @ApiResponse({
+    status: 200,
+    description: 'The attendance has been successfully retrieved.',
+    type: FindAttendanceByDateResponseDto,
+  })
   async getAttendance(
     @Query('page') page: number = 1,
     @Query('perPage') perPage: number = 1000,
