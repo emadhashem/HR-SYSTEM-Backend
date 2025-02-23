@@ -59,6 +59,7 @@ jobs:
         run: |
           docker build -t hr-system \
             --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
             .
 
       # Step 3: Run the Docker container and test it
