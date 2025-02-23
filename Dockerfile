@@ -8,7 +8,7 @@ COPY prisma/schema.prisma ./prisma/
 RUN npm install
 
 COPY . .
-# COPY .env ./.env
+COPY .env ./.env
 
 RUN npm run build
 
@@ -22,13 +22,12 @@ COPY --from=builder /app/yarn.lock ./
 COPY --from=builder /app/dist ./dist
 COPY prisma/schema.prisma ./prisma/
 COPY prisma/seed.ts ./prisma/
-# COPY .env ./.env
+COPY .env ./.env
 
 RUN npm install --omit=dev
-RUN npm install -D ts-node typescript @types/node
 
 RUN npx prisma generate
-RUN npx prisma migrate dev
+RUN npx prisma migrate deploy
 RUN npx prisma db push
 
 EXPOSE 4000
